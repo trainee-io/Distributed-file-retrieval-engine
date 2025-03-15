@@ -1,27 +1,43 @@
 package csc435.app;
 
+import java.util.ArrayList;
 import org.zeromq.ZContext;
 
 public class ServerProcessingEngine {
     private IndexStore store;
-    // TO-DO keep track of the ZMQ context
-    // TO-DO keep track of the ZMQ Proxy object
-    // TO-DO keep track of the ZMQ Proxy thread and worker threads
+    private ZContext cnxt;
+    private ZMQProxyWorker prxy_wrkr;
+    private Thread prxy_thrd;
+    private ArrayList<String> connect_clnts = new ArrayList<>();
 
     public ServerProcessingEngine(IndexStore store) {
         this.store = store;
+        this.cnxt = new ZContext();
     }
 
-    public void initialize(int serverPort, int numWorkerThreads) {
-        // TO-DO initialize the ZMQ context
-        // TO-DO create a ZMQ Proxy object
-        // TO-DO create and start the ZMQ Proxy thread
-        // TO-DO create Server Worker objects
-        // TO-DO create and start the worker threads
+    public void initialize(int srvr_prt, int num_wrkr_thrds) {
+        prxy_wrkr = new ZMQProxyWorker(cnxt, "*", Integer.toString(srvr_prt), num_wrkr_thrds, this);
+        prxy_thrd = new Thread(prxy_wrkr);
+        prxy_thrd.start();
     }
 
     public void shutdown() {
-        // TO-DO destroy the ZMQ context
-        // TO-DO join the ZMQ Proxy and worker threads
+        cnxt.destroy();
+        try {
+            prxy_thrd.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void listConnectedClients() {
+        System.out.println("Connected Clients:");
+        for (String clnt : connect_clnts) {
+            System.out.println(clnt);
+        }
+    }
+
+    public void addConnectedClient(String clientInfo) {
+        connect_clnts.add(clientInfo);
     }
 }
