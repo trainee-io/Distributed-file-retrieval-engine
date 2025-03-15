@@ -50,11 +50,11 @@ public class ClientAppInterface {
             if (command.length() >= 6 && command.substring(0, 6).compareTo("search") == 0) {
                 String query = command.substring(7);
                 String[] terms = query.split(" AND ");
-                ArrayList<String> termList = new ArrayList<>();
+                ArrayList<String> list_of_words = new ArrayList<>();
                 for (int i = 0; i < terms.length; i++) {
-                    termList.add(terms[i].trim());
+                    list_of_words.add(terms[i].trim());
                 }
-                ClientProcessingEngine.SearchResult res = engine.searchFiles(termList);
+                ClientProcessingEngine.SearchResult res = engine.searchFiles(list_of_words);
                 System.out.println("Search completed in " + res.executionTime + " seconds");
                 System.out.println("Search results (top 10 out of " + res.total_match + "):");
                 for (int i = 0; i < res.doc_freq.size(); i++) {
