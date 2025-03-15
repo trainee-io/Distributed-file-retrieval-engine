@@ -92,14 +92,14 @@ public class ServerWorker implements Runnable {
     }
 
     private ArrayList<DocFreqPair> intersectResults(ArrayList<DocFreqPair> l1, ArrayList<DocFreqPair> l2) {
-        ArrayList<DocFreqPair> result = new ArrayList<>();
+        ArrayList<DocFreqPair> res = new ArrayList<>();
         for (DocFreqPair p1 : l1) {
             for (DocFreqPair p2 : l2) {
                 if (p1.doc_num == p2.doc_num) {
-                    result.add(new DocFreqPair(p1.doc_num, p1.wrd_frq + p2.wrd_frq));
+                    res.add(new DocFreqPair(p1.doc_num, p1.wrd_frq + p2.wrd_frq));
                 }
             }
         }
-        return result;
+        return res;
     }
 }
